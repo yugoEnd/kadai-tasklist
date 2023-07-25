@@ -13,15 +13,15 @@ class TasksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-             $tasks = Task::all();         // 追加
+   public function index()
+{
+    $tasks = Task::all(); // タスク一覧を取得
 
-        // メッセージ一覧ビューでそれを表示
-        return view('tasks.index', [     // 追加
-            'tasks' => $tasks,        // 追加
-        ]); 
-    }
+    // タスク一覧ビューでそれを表示
+    return view('tasks.index', [
+        'tasks' => $tasks,
+    ]);
+}
 
       /**
      * Show the form for creating a new resource.
@@ -31,11 +31,11 @@ class TasksController extends Controller
          // getでmessages/createにアクセスされた場合の「新規登録画面表示処理
     public function create()
     {
-         $task = new Task;
+         $tasks = new Task;
 
-        // メッセージ作成ビューを表示
+        // タスク作成ビューを表示
         return view('tasks.create', [
-            'task' => $task,
+            'tasks' => $tasks,
         ]); 
     }
 
@@ -55,7 +55,7 @@ class TasksController extends Controller
         ]);
 
 
-            // メッセージを作成
+            //タスクを作成
         $task = new Task;
          $task->status = $request->status;
         $task->content = $request->content;
@@ -137,7 +137,7 @@ class TasksController extends Controller
       // deleteでmessages/idにアクセスされた場合の「削除処理」
     public function destroy($id)
     {
-             // idの値でメッセージを検索して取得
+             // idの値でタスクを検索して取得
         $task = Task::findOrFail($id);
         // メッセージを削除
         $task->delete();
