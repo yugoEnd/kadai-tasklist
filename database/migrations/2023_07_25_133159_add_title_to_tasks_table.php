@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
-           
-            $table->string('content');
-            $table->timestamps();
-            
-   
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id'); //
+                // 外部キー制約
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -30,7 +27,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
-      
+        Schema::table('tasks', function (Blueprint $table) {
+              $table->dropForeign(['user_id']);
+            //
+        });
     }
 };
