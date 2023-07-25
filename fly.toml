@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for withered-field-1881 on 2023-07-20T02:43:56Z
+# fly.toml app configuration file generated for damp-flower-62 on 2023-07-25T07:04:17Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "withered-field-1881"
+app = "damp-flower-62"
 primary_region = "nrt"
 console_command = "php /var/www/html/artisan tinker"
 
@@ -14,26 +14,20 @@ console_command = "php /var/www/html/artisan tinker"
 
 [env]
   APP_ENV = "production"
-  LOG_CHANNEL = "errorlog"
+  LOG_CHANNEL = "stderr"
   LOG_LEVEL = "info"
   LOG_STDERR_FORMATTER = "Monolog\\Formatter\\JsonFormatter"
   SESSION_DRIVER = "cookie"
   SESSION_SECURE_COOKIE = "true"
-  APP_URL = "https://tasklist.fly.dev"
+  APP_URL = "https://damp-flower-62.fly.dev"
   APP_NAME = "Laravel"
   APP_DEBUG = false
   DB_CONNECTION = "pgsql"
   DB_HOST = "db.jxwdazdnravvqktzrvkq.supabase.co"
   DB_PORT = 5432
   DB_DATABASE = "postgres"
-  DB_USERNAME = "postgres" 
-  
-  
-  
-  
-  
-  
-  
+  DB_USERNAME = "postgres"
+
   
 [http_service]
   internal_port = 8080
