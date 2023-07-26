@@ -9,23 +9,28 @@ use App\Models\User;                                        // 追加
 
 class UsersController extends Controller
 {
-    public function index()                                 // 追加       
-    {                                                       // 追加
+
+    public function index()                                  
+    {           
         // ユーザ一覧をidの降順で取得
-        $users = User::orderBy('id', 'desc')->paginate(10); // 追加
+        $users = User::orderBy('id', 'desc')->paginate(10);
 
         // ユーザ一覧ビューでそれを表示
-        return view('users.index', [                        // 追加
-            'users' => $users,                              // 追加
-        ]);                                                 // 追加
-    }                                                       // 追加
+        return view('users.index', [
+            'users' => $users,
+        ]);
+    }
     
-            
-     public function show($id)
+    public function show($id)
     {
         // idの値でユーザを検索して取得
         $user = User::findOrFail($id);
-        
+
+        // 認証済みユーザがその投稿の所有者でない場合はトップページにリダイレクトする
+        if (Auth::id() !== $user->id) {
+            return redirect('/');
+        }
+
         // 関係するモデルの件数をロード
         $user->loadRelationshipCounts();
         
@@ -36,6 +41,6 @@ class UsersController extends Controller
         return view('users.show', [
             'user' => $user,
             'tasks' => $tasks,
-        ]);// 追加
+        ]);
     }
 }
