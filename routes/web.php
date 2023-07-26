@@ -22,6 +22,5 @@ require __DIR__.'/auth.php';
 
 Route::group(['middleware' => ['auth']], function () {          
   Route::get('/', [TasksController::class, 'index']);
-    Route::resource('users', UsersController::class, ['only' => ['show']]); 
-    Route::resource('tasks', TasksController::class, ['only' => ['edit','update','store', 'destroy']]);
+    Route::resource('tasks', TasksController::class, ['only' => ['create','show','edit','update','store', 'destroy']]);
 });// 追記

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 use App\Models\Task;
@@ -68,7 +68,7 @@ class TasksController extends Controller
             'content' => $request->content,
         ]);
          // 前のURLへリダイレクトさせる
-        return back();
+        return redirect('/');
     }
 
     /**
@@ -78,18 +78,30 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
       // getでtasks/idにアクセスされた場合の「取得表示処理」
-    public function show($id)
+      public function show($id)
     {
-          // idの値でタスクを検索して取得
+        // idの値でタスクを検索して取得
         $task = Task::findOrFail($id);
- if (\Auth::id() === $task->user_id) {
+
+        // 認証済みユーザがその投稿の所有者でない場合はトップページにリダイレクトする
+        if (Auth::id() !== $task->user_id) {
+            return redirect('/');
+        }
+
+        // 関係するモデルの件数をロード
+        $task->user->loadRelationshipCounts();
+        
+        // ユーザーの投稿一覧を作成日時の降順で取得
+        $tasks = $task->user->tasks()->orderBy('created_at', 'desc')->paginate(10);
+
         // タスク詳細ビューでそれを表示
         return view('tasks.show', [
             'task' => $task,
+            'tasks' => $tasks,
         ]);
-         return back();
-        }
+    
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -100,19 +112,19 @@ class TasksController extends Controller
          // getでtasks/id/editにアクセスされた場合の「更新画面表示処理」
     public function edit($id)
     {
-         // idの値でタスクを検索して取得
-         // idの値で投稿を検索して取得
+        // idの値でタスクを検索して取得
         $task = \App\Models\Task::findOrFail($id);
-       // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は投稿を削除
-        if (\Auth::id() === $task->user_id) {
 
+        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合はタスクを編集
+        if (\Auth::id() === $task->user_id) {
             // タスク編集ビューでそれを表示
             return view('tasks.edit', [
-            'task' => $task,
+                'task' => $task,
             ]);
-             // 前のURLへリダイレクトさせる
-           return back();
         }
+
+    // 前のURLへリダイレクトさせる
+    return redirect('/');
     }
 
     /**
@@ -156,11 +168,11 @@ class TasksController extends Controller
        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は投稿を削除
         if (\Auth::id() === $task->user_id) {
             $task->delete();
-            return back()
+            return redirect('/')
                 ->with('success','Delete Successful');
         }
        // 前のURLへリダイレクトさせる
-        return back()
+        return redirect('/')
             ->with('Delete Failed');
     }
 }

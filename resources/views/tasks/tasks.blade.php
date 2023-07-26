@@ -17,7 +17,7 @@
                         <div>
                           
                             {{-- 投稿の所有者のユーザ詳細ページへのリンク --}}
-                            <a class="link link-hover text-info" href="{{ route('users.show', $task->user->id) }}">{{ $task->user->name }}</a>
+                            <a class="link link-hover text-info" href="{{ route('tasks.show', $task->user->id) }}">{{ $task->user->name }}</a>
                             <span class="text-muted text-gray-500">posted at {{ $task->created_at }}</span>
                            
                         </div>
