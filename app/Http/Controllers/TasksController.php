@@ -110,21 +110,20 @@ class TasksController extends Controller
      * @return \Illuminate\Http\Response
      */
          // getでtasks/id/editにアクセスされた場合の「更新画面表示処理」
-    public function edit($id)
+   public function edit($id)
     {
-        // idの値でタスクを検索して取得
-        $task = \App\Models\Task::findOrFail($id);
-
-        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合はタスクを編集
-        if (\Auth::id() === $task->user_id) {
-            // タスク編集ビューでそれを表示
-            return view('tasks.edit', [
-                'task' => $task,
-            ]);
+       // idの値でタスクを検索して取得
+       $task = \App\Models\Task::findOrFail($id);
+    
+        // 認証済みユーザがその投稿の所有者でない場合はトップページにリダイレクトする
+        if (\Auth::id() !== $task->user_id) {
+            return redirect('/');
         }
 
-    // 前のURLへリダイレクトさせる
-    return redirect('/');
+        // タスク編集ビューでそれを表示
+        return view('tasks.edit', [
+        'task' => $task,
+        ]);
     }
 
     /**
