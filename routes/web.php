@@ -19,8 +19,7 @@ use App\Http\Controllers\TasksController;
 Route::get('/dashboard', [TasksController::class, 'index'])->middleware(['auth'])->name('dashboard');
 require __DIR__.'/auth.php';
 
-
 Route::group(['middleware' => ['auth']], function () {          
-  Route::get('/', [TasksController::class, 'index']);
+    Route::get('/', [TasksController::class, 'index']);
     Route::resource('tasks', TasksController::class, ['only' => ['create','show','edit','update','store', 'destroy']]);
-});// 追記
+});

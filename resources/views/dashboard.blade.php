@@ -8,10 +8,8 @@
                 @include('tasks.index')
             </aside>
             <div class="sm:col-span-2">
-                {{-- 投稿フォーム --}}
-                @include('tasks.form')
-                {{-- 投稿一覧 --}}
-                @include('tasks.tasks')
+            
+            
             </div>
         </div>
     @else

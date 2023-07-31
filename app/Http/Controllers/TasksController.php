@@ -57,19 +57,23 @@ class TasksController extends Controller
      // postでtasks/にアクセスされた場合の「新規登録処理」
     public function store(Request $request)
     {
-           // バリデーション
-        $request->validate([
+       // バリデーション
+       $request->validate([
+            'status' => 'required|max:255', // statusもバリデーション対象に追加
             'content' => 'required|max:255',
         ]);
-        
+    
 
-       // 認証済みユーザ（閲覧者）の投稿として作成（リクエストされた値をもとに作成）
+         // 認証済みユーザ（閲覧者）の投稿として作成（リクエストされた値をもとに作成）
         $request->user()->tasks()->create([
+            'status' => $request->status,
             'content' => $request->content,
         ]);
-         // 前のURLへリダイレクトさせる
+
+        // 前のURLへリダイレクトさせる
         return redirect('/');
     }
+
 
     /**
      * Display the specified resource.
@@ -87,17 +91,13 @@ class TasksController extends Controller
         if (Auth::id() !== $task->user_id) {
             return redirect('/');
         }
-
-        // 関係するモデルの件数をロード
-        $task->user->loadRelationshipCounts();
-        
         // ユーザーの投稿一覧を作成日時の降順で取得
         $tasks = $task->user->tasks()->orderBy('created_at', 'desc')->paginate(10);
 
         // タスク詳細ビューでそれを表示
         return view('tasks.show', [
             'task' => $task,
-            'tasks' => $tasks,
+            
         ]);
     
     }
@@ -143,7 +143,7 @@ class TasksController extends Controller
 
 
          // idの値でtaskを検索して取得
-        $task = Task::findOrFail($id);
+        $task = Task::find($id);
         //タスクを更新
            $task->status = $request->status;
         $task->content = $request->content;
@@ -172,6 +172,6 @@ class TasksController extends Controller
         }
        // 前のURLへリダイレクトさせる
         return redirect('/')
-            ->with('Delete Failed');
+             ->with('error', 'Delete Failed');
     }
 }
